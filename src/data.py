@@ -1,30 +1,33 @@
 import pandas as pd
 
+# 尝试导入 yfinance 库用于数据下载，如果未安装则设置为 None
 try:
     import yfinance as yf
-except ImportError:  # pragma: no cover - yfinance might not be installed in tests
+except ImportError:  # pragma: no cover - yfinance 可能在测试环境中未安装
     yf = None
 
 
 def fetch(symbol: str, start: str | None = None, end: str | None = None) -> pd.DataFrame:
-    """Fetch historical data for a symbol using yfinance.
+    """使用 yfinance 下载指定标的的历史数据。
 
     Parameters
     ----------
     symbol : str
-        The ticker symbol to download, e.g. 'AAPL'.
+        要下载的股票代码，例如 ``AAPL``。
     start : str, optional
-        Start date in 'YYYY-MM-DD' format.
+        开始日期，格式 ``YYYY-MM-DD``。
     end : str, optional
-        End date in 'YYYY-MM-DD' format.
+        结束日期，格式 ``YYYY-MM-DD``。
 
     Returns
     -------
     pandas.DataFrame
-        DataFrame indexed by date with a `Close` column.
+        以日期为索引，包含 ``Close`` 收盘价列的 DataFrame。
     """
     if yf is None:
-        raise ImportError("yfinance is required for data download. Please install it via 'pip install yfinance'.")
+        raise ImportError(
+            "yfinance 模块未安装，无法自动下载数据。请通过 'pip install yfinance' 安装。"
+        )
 
     data = yf.download(symbol, start=start, end=end, progress=False)
     if 'Adj Close' in data.columns:

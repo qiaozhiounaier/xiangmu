@@ -10,10 +10,13 @@ from .plotting import plot
 
 
 def load_data(args: argparse.Namespace) -> pd.DataFrame:
+    """根据参数加载数据，优先读取本地 CSV。"""
+
     if args.csv:
         df = pd.read_csv(args.csv, parse_dates=['Date'])
         df.set_index('Date', inplace=True)
         return df
+    # 若未指定 CSV，则通过 yfinance 下载数据
     return data_module.fetch(args.symbol, start=args.start, end=args.end)
 
 
@@ -28,9 +31,12 @@ def main() -> None:
     parser.add_argument('--output', help='Path to save the plot (PNG)')
     args = parser.parse_args()
 
+    # 加载数据
     df = load_data(args)
+    # 初始化策略与回测器
     strategy = MovingAverageCrossStrategy(short_window=args.short, long_window=args.long)
     bt = Backtester(strategy)
+    # 执行回测并绘图
     result = bt.run(df)
     plot(df, result, save_path=args.output)
 

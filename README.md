@@ -39,3 +39,7 @@ python -m src.backtest data/sample.csv --short 3 --long 5 --output sample.png
 
 Both commands will generate a plot showing the closing price, moving averages
 and the strategy equity curve.
+
+## 中文说明
+
+本仓库提供了一套简单的量化回测框架，包含数据下载、策略接口以及绘图功能。您可以按照上面的示例命令运行回测，也可以自行编写策略类并与 `Backtester` 配合使用。
